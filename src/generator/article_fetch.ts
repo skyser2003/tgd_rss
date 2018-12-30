@@ -4,6 +4,7 @@ import { JSDOM } from "jsdom";
 class ArticleInfo {
     constructor(public order: number,
         public title: string,
+        public author: string,
         public articleId: string,
         public time: Date | undefined) {
 
@@ -56,7 +57,7 @@ export class ArticleFetcher {
         const doc = dom.window.document;
         const elements = doc.querySelectorAll(".list-title");
 
-        const articles = [] as HTMLAnchorElement[];
+        const articles = [] as Element[];
 
         let isRecentArticles = false;
 
@@ -72,20 +73,24 @@ export class ArticleFetcher {
                 return;
             }
 
-            const article = element.getElementsByTagName("a")[0];
-            articles.push(article);
+            articles.push(element);
         });
 
         const firstArticle = articles[0];
-        if (firstArticle.parentElement!.getElementsByClassName("fa-star") !== null) {
+        if (firstArticle.getElementsByClassName("fa-star") !== null) {
             articles.shift();
         }
 
         const recentArticles = [] as ArticleInfo[];
 
         const promises = articles.map((article, index) => {
-            const title = article.attributes.getNamedItem("title")!.value;
-            let articleId = article.attributes.getNamedItem("href")!.value;
+            const titleElem = article.getElementsByTagName("a")[0];
+            const authorElem = article.getElementsByClassName("list-writer")[0].getElementsByTagName("span")[0];
+
+            const title = titleElem.attributes.getNamedItem("title")!.value;
+            const author = (authorElem!.textContent as string).trim();
+
+            let articleId = titleElem.attributes.getNamedItem("href")!.value;
             if (articleId[0] === "/") {
                 articleId = articleId.slice(1);
             }
@@ -93,7 +98,7 @@ export class ArticleFetcher {
             const articleUrl = new URL(articleId, rootUrl);
             return this.getArticleInfo(articleUrl.href)
                 .then(date => {
-                    recentArticles.push(new ArticleInfo(index, title, articleId, date));
+                    recentArticles.push(new ArticleInfo(index, title, author, articleId, date));
                 });
         })
 
