@@ -9,7 +9,6 @@
   "author": "Seung Ho Jang",
   "license": "MIT",
   "dependencies": {
-    "jQuery": "^1.7.4",
     "jsdom": "^13.1.0",
     "request": "^2.88.0"
   },
