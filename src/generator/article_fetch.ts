@@ -55,26 +55,7 @@ export class ArticleFetcher {
         const dom = new JSDOM(body);
 
         const doc = dom.window.document;
-        const elements = doc.querySelectorAll(".list-title");
-
-        const articles = [] as Element[];
-
-        let isRecentArticles = false;
-
-        elements.forEach(element => {
-            if (isRecentArticles === false) {
-                const isAnnouncement = element.getElementsByClassName("fa-info-circle").length !== 0;
-                if (isAnnouncement === false) {
-                    isRecentArticles = true;
-                }
-            }
-
-            if (isRecentArticles === false) {
-                return;
-            }
-
-            articles.push(element);
-        });
+        const articles = [...doc.querySelectorAll(".list-title").values()]
 
         const firstArticle = articles[0];
         if (firstArticle.getElementsByClassName("fa-star") !== null) {
