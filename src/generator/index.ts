@@ -24,7 +24,6 @@ class Main {
 
         const articleFetcher = new ArticleFetcher(streamerName);
         const articles = await articleFetcher.getRecentArticles();
-        console.log(articles);
 
         const insertData = articles.articles.map(article => {
             return [article.articleId, articles.streamerId, article.title, ""];
