@@ -17,8 +17,16 @@ export class DB {
                     return;
                 }
 
-                const result = conn.query(query, ...args).values;
-                resolve(result);
+                const values = [...args];
+
+                conn.query(query, values, (err2, res) => {
+                    if (err2) {
+                        reject(err2);
+                        return;
+                    }
+                    
+                    resolve(res);
+                });
             });
         });
     }
