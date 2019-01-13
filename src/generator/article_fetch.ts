@@ -55,7 +55,7 @@ export class ArticleFetcher {
 
         const streamerIdMatch = body.match(regex);
         if (streamerIdMatch === null) {
-            return {};
+            return { streamerId: -1, articles: [] as ArticleInfo[] };
         }
 
         const streamerId = parseInt(streamerIdMatch[1]);
