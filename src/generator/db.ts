@@ -10,8 +10,16 @@ export class DB {
     }
 
     async query(query: string, ...args: any[]) {
-        const getConnection = util.promisify(this.pool.getConnection);
-        const conn = await getConnection();
-        conn.query(query, ...args).values;
+        return new Promise<any>((resolve, reject) => {
+            this.pool.getConnection((err, conn) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const result = conn.query(query, ...args).values;
+                resolve(result);
+            });
+        });
     }
 }
