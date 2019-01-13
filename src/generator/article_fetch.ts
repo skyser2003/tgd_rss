@@ -5,7 +5,7 @@ class ArticleInfo {
     constructor(public order: number,
         public title: string,
         public author: string,
-        public articleId: string,
+        public articleId: number,
         public time: Date | undefined) {
 
     }
@@ -86,7 +86,7 @@ export class ArticleFetcher {
             const articleUrl = new URL(articleId, rootUrl);
             return this.getArticleInfo(articleUrl.href)
                 .then(date => {
-                    recentArticles.push(new ArticleInfo(index, title, author, articleId, date));
+                    recentArticles.push(new ArticleInfo(index, title, author, parseInt(articleId), date));
                 });
         })
 
