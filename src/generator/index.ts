@@ -25,6 +25,15 @@ class Main {
         const articleFetcher = new ArticleFetcher(streamerName);
         const articles = await articleFetcher.getRecentArticles();
         console.log(articles);
+
+        const insertData = articles.articles.map(article => {
+            return [article.articleId, articles.streamerId, article.title, ""];
+        });
+
+        db.query("INSERT IGNORE INTO `streamer` (`tgd_id`, `name`) VALUES (?, ?)", articles.streamerId, streamerName);
+
+        db.query("INSERT IGNORE INTO `articles` (`article_id`, `streamer_uid`, `title`, `content`) VALUES ?", insertData);
+        db.query("SELECT * FROM `articles` JOIN `streamer` ON `streamer`.`tgd_id` = `articles`.`streamer_uid`");
     }
 }
 
