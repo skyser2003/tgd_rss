@@ -31,6 +31,8 @@ class Main {
 
         db.query("INSERT IGNORE INTO `streamer` (`tgd_id`, `name`) VALUES (?, ?)", articles.streamerId, streamerName);
 
+        const newIds = await db.query("SELECT `article_id` FROM `articles` WHERE `article_id` NOT IN (?)", articles.articles.map(article => article.articleId));
+
         db.query("INSERT IGNORE INTO `articles` (`article_id`, `streamer_uid`, `title`, `content`) VALUES ?", insertData);
         db.query("SELECT * FROM `articles` JOIN `streamer` ON `streamer`.`tgd_id` = `articles`.`streamer_uid`");
     }
