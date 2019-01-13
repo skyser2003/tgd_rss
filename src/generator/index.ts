@@ -8,10 +8,12 @@ class Main {
     async run() {
         const dbUrl = process.env.DB_URL || "localhost";
         const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306;
+        const dbDatabse = "tgd";
 
         const db = new DB({
             host: dbUrl,
-            port: dbPort
+            port: dbPort,
+            database: dbDatabse
         });
 
         db.query("SELECT * FROM `articles` JOIN `streamer` ON `streamer`.`uid` = `articles`.`streamer_uid`");
