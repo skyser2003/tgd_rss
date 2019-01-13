@@ -48,10 +48,17 @@ export class ArticleFetcher {
     }
 
     async getRecentArticles() {
+        const regex = /data-owner-id="(\d+)"/;
         const rootUrl = new URL(`https://tgd.kr/${this.streamerNickname}/page/1/`);
 
         const [res, body] = await this.requestGet(rootUrl.href);
 
+        const streamerIdMatch = body.match(regex);
+        if (streamerIdMatch === null) {
+            return {};
+        }
+
+        const streamerId = parseInt(streamerIdMatch[1]);
         const dom = new JSDOM(body);
 
         const doc = dom.window.document;
@@ -86,6 +93,6 @@ export class ArticleFetcher {
         await Promise.all(promises);
 
         recentArticles.sort((art1, art2) => art1.order - art2.order);
-        return recentArticles;
+        return { streamerId: streamerId, articles: recentArticles };
     }
 }
